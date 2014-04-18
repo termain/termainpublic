@@ -1,6 +1,14 @@
 #! /usr/bin/python
 
-import yaml
+from __future__ import print_function
+
+try:
+    import yaml
+except ImportError:
+    print("""yaml module not found. Try package PyYAML on Fedora/Redhat and python-yaml on
+       debian systems""")
+    raise
+    
 import sys
 from collections import defaultdict
 
@@ -160,7 +168,7 @@ def main():
     """
     output_format = sys.argv[1].strip()
     if output_format == "-h":
-        print main.__doc__
+        print(main.__doc__)
     else:
         infile = sys.argv[2].strip()
         outfile = sys.argv[3].strip()
@@ -169,7 +177,7 @@ def main():
         elif output_format == "yaml":
             csv_to_yaml( infile, outfile )
         else:
-            print output_format + " unknown! Type csv_tools.py -h for help"
+            print(output_format + " unknown! Type csv_tools.py -h for help")
 
 if __name__ == "__main__":
     main()
