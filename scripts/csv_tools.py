@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 from __future__ import print_function
+#todo Redesign data storage and properly implement TablularData class
 
 try:
     import yaml
@@ -26,6 +27,55 @@ class Debug:
 
 debug = Debug()
 
+
+class TabularData:
+    """Class for storing tabular (csv style) data"""
+    def empty_field_factory(self):
+        return self.empty_field
+
+    def __init__(self, empty_field = ''):
+        self.row_labels = []
+        self.column_labels = []
+        self.number_rows = 0
+        self.number_columns = 0
+        self.row_index_to_name = {}
+        self.row_name_to_index = {}
+        self.col_index_to_name = {}
+        self.col_name_to_index = {}
+        self.empty_field = empty_field
+        self.data = defaultdict( self.empty_field_factory )
+
+    def from_dictionary(self, dictionary, row_label_list = None, column_label_list = None):
+        """Build the tabular data from the sort of dictionaries output by 
+        csv_to_dictionary_with_labels.
+
+        If no row_label_list is given, labels are looked for in entry "__rlabels"
+        If no column_label_list is given, labels are looked for in entry "__clabels"
+
+        """
+        """
+        if row_label_list is None:
+            self.row_label_list = dictionary["__rlabels"]
+        else:
+            self.row_labels = row_label_list
+        if column_label_list is None:
+            self.column_labels = dictionary["__clabels"]
+        else:
+            self.column_labels = column_label_list
+
+        for index, name in enumerate( self.column_labels ):
+            self.col_index_to_name[ index ] = name
+            self.col_name_to_index[ name ] = index
+
+        for index, name in enumerate( self.row_labels ):
+            self.row_index_to_name[ index ] = name
+            self.row_name_to_index[
+
+        self.data.update( dictionary )   
+        """
+        
+
+#Utility functions
 def split_line( line, delimitter=',' ):
     return [ element.strip() for element in line.split(delimitter) ]
 
@@ -49,7 +99,7 @@ def csv_to_dictionary( csv_file, add_metadata = True ):
        succeeding columns as
        list elements
 
-        Returns the dictionary and an ordered list of the labels.
+        Returns the dictionary and an ordered list of the labels. 
     
         When add_metadata flag is set, the labels list is stashed in "__labels"
     """
@@ -155,7 +205,6 @@ def yaml_to_csv( yamlfile, csvfile ):
 
     csvid.close()
     yamlid.close()
-
 
 def main():
     """Usage: csv_tools.py [-h] <outputmode> <input_file> <output_file>
